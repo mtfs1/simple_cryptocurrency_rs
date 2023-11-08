@@ -1,0 +1,96 @@
+version: '3'
+
+services:
+  node1:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node1
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node2:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node2
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node3:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node3
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node4:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node4
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node5:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node5
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node6:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node6
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node7:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node7
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node8:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node8
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node9:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node9
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+  node10:
+    image: rusty-blockchain:latest
+    stdin_open: true
+    environment:
+      - NODE_NAME=node10
+      - RUST_BACKTRACE=1
+    networks:
+      - p2p_network
+
+networks:
+  p2p_network:
+
