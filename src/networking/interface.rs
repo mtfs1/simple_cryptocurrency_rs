@@ -100,6 +100,13 @@ impl NetworkInterface {
             };
 
             if let MessageType::StartPeering = message.message_type {
+                if self.peers.lock().unwrap().len() == 6 {
+                    let _ = MessageHeader::new()
+                        .set_type(MessageType::Nack)
+                        .send_to(&mut conn);
+                    continue;
+                }
+
                 let res = MessageHeader::new()
                     .set_type(MessageType::Ack)
                     .send_to(&mut conn);

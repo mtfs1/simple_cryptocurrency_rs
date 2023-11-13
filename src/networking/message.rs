@@ -8,7 +8,8 @@ use serde::{Serialize, Deserialize};
 pub enum MessageType {
     StartPeering,
     ListPeers,
-    Ack
+    Ack,
+    Nack
 }
 
 #[derive(Serialize, Deserialize, Debug)]
