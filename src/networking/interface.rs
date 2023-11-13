@@ -1,3 +1,4 @@
+use std::collections::{HashMap, VecDeque, HashSet};
 use std::io::{Result, Error, ErrorKind, Write, Read};
 use std::net::{TcpListener, TcpStream, ToSocketAddrs, IpAddr};
 use std::sync::Mutex;
@@ -167,6 +168,68 @@ impl NetworkInterface {
         }
 
         Ok(())
+    }
+
+    pub fn bootstrap(&self, ip: IpAddr) {
+        println!("[BOOTSTRAP][{}]", ip);
+
+        if self.peers.lock().unwrap().len() >= 3 {
+            println!("[ERROR][ALREADY BOOTSTRAPPED]");
+            return;
+        }
+
+        let mut nodes_queue = VecDeque::<IpAddr>::new();
+        nodes_queue.push_back(ip);
+        let mut nodes_seen = HashSet::<IpAddr>::new();
+        nodes_seen.insert(ip);
+        let mut nodes = HashMap::<IpAddr, u32>::new();
+
+        'graph_search: loop {
+            for _ in 0..10 {
+                let ip = nodes_queue.pop_back();
+                if let None = ip {
+                    break;
+                }
+                let ip = ip.unwrap();
+
+                if let Ok(val) = self.ask_for_peers(ip) {
+                    nodes.insert(ip, val.len() as u32);
+
+                    for node in val {
+                        if !nodes_seen.contains(&node) {
+                            nodes_seen.insert(node);
+                            nodes_queue.push_back(node);
+                        }
+                    }
+                }
+            }
+
+            if nodes.len() == 1 {
+                let (ip, _) = nodes.drain().next().unwrap();
+                let _ = self.connect_to_peer(ip);
+                break 'graph_search;
+            }
+
+            for _ in 0..3 {
+                let min_connections = nodes.iter()
+                    .filter(|(_k, v)| **v != 0)
+                    .min_by(|a, b| a.1.cmp(&b.1))
+                    .map(|(k, _v)| k);
+
+                if let None = min_connections {
+                    break 'graph_search;
+                }
+
+                let min_connections = min_connections.unwrap().clone();
+                nodes.remove(&min_connections);
+
+                let _ = self.connect_to_peer(min_connections);
+
+                if self.peers.lock().unwrap().len() >= 3 {
+                    break 'graph_search;
+                }
+            }
+        }
     }
 }
 
