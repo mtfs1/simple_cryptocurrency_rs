@@ -1,3 +1,4 @@
+mod blockchain;
 mod networking;
 
 fn main() {
